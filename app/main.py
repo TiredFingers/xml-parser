@@ -12,6 +12,7 @@ from app.exceptions import ParsingDeepLimitError, WrongFileExtensionError, Files
 
 
 def get_cli_args():
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument('file', help='XML file to parse')
@@ -33,15 +34,18 @@ def get_cli_args():
     return parser.parse_args()
 
 
-def parse_deep_limit(tree: defusedxml.ElementTree, tag='root', limit=settings.LDEEP, time_limit=settings.LTIME,
-                     collect_text=True, collect_attrib=False):
+def parse_deep_limit(tree: defusedxml.ElementTree, tag: str = 'root', limit: int = settings.LDEEP,
+                     time_limit: int = settings.LTIME, collect_text: bool = True, collect_attrib: bool = False):
     """
 
-    :param tree:
-    :param tag:
-    :param limit:
-    :param time_limit:
-    :param collect_text:
+    Do achieve ability to limit parsing time and deps, I was forced to use BFS here
+
+    :param tree: xml parsed tree
+    :param tag: tag to collect
+    :param limit: parsing deep limit
+    :param time_limit: parsing time limit
+    :param collect_text: collect tag text
+    :param collect_attrib: collect tag attributes
     :raises ParsingDeepLimitError, ExecutionTimeLimitError
     :return:
     """
@@ -90,12 +94,24 @@ def parse_deep_limit(tree: defusedxml.ElementTree, tag='root', limit=settings.LD
     return result
 
 
-def my_parse(file, tag='root', forbid_dtd=settings.DTD, forbid_entities=settings.EEXPAND,
-             forbid_external=settings.EEROSLVE, deep=settings.LDEEP, time_limit=settings.LTIME):
+def my_parse(file: str, tag: str = 'root', forbid_dtd: bool = settings.DTD, forbid_entities: bool = settings.EEXPAND,
+             forbid_external: bool = settings.EEROSLVE, deep: int = settings.LDEEP, time_limit: int = settings.LTIME):
+    """
 
-    tree = parse(file, forbid_dtd=forbid_dtd, forbid_entities=forbid_entities, forbid_external=forbid_external)
+    :param file: xml file for parsing
+    :param tag: tag to collect
+    :param forbid_dtd:
+    :param forbid_entities: entities expand
+    :param forbid_external: external resources request
+    :param deep: parsing deepness
+    :param time_limit: parsing timelimit
+    :return: list
+    """
 
-    return parse_deep_limit(tree, tag, limit=deep, time_limit=time_limit)
+    return parse_deep_limit(
+        parse(file, forbid_dtd=forbid_dtd, forbid_entities=forbid_entities, forbid_external=forbid_external),
+        tag, limit=deep, time_limit=time_limit
+    )
 
 
 def main():
@@ -126,8 +142,8 @@ def main():
         sys.exit(1)
 
     try:
-        parsed = my_parse(cli_args.file, tag=cli_args.tag, forbid_dtd=cli_args.dtd, forbid_entities=cli_args.eexpand, forbid_external=cli_args.eresolve, deep=settings.LDEEP, time_limit=settings.LTIME)
-        print(parsed)
+        return my_parse(cli_args.file, tag=cli_args.tag, forbid_dtd=cli_args.dtd, forbid_entities=cli_args.eexpand,
+                        forbid_external=cli_args.eresolve, deep=cli_args.ldeep, time_limit=cli_args.ltime)
     except Exception as e:
         print(e)
         sys.exit(1)
