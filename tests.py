@@ -30,6 +30,6 @@ def test_parsing_deep_find_rank():
 
     et = _parse('./test.xml')
 
-    ranks = parse_deep_limit(et, 'rank')
+    ranks = parse_deep_limit(et, 'rank', limit=5)
 
-    print(ranks)
+    assert len(ranks) == 5
