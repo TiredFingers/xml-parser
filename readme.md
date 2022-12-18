@@ -1,5 +1,5 @@
-[![Supported Python
-versions](https://img.shields.io/badge/python-3.9-yellow)]
+![Supported Python
+versions](https://img.shields.io/badge/python-3.9-yellow)
 
 Based on https://github.com/tiran/defusedxml
 
