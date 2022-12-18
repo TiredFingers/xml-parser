@@ -1,4 +1,8 @@
 
+class ExecutionTimeLimitError(Exception):
+    pass
+
+
 class FilesizeLimitError(Exception):
     pass
 
