@@ -1,0 +1,3 @@
+
+class ParsingDeepLimitError(Exception):
+    pass
