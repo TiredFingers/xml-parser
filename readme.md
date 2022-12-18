@@ -1,5 +1,5 @@
 # Python version
-This app use 3.9 because of defusedxml package which is support 3.9 not higher
+This app use 3.9 because of defusedxml package which is support <= 3.9
 
 ## Parameters accepted by the parser
 * Prohibiting the use of DTD
